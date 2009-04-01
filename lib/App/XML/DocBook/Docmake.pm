@@ -15,13 +15,13 @@ App::XML::DocBook::Docmake - translate DocBook/XML to other formats
 
 =head1 VERSION
 
-Version 0.01
+Version 0.0101
 
 =cut
 
 use vars qw($VERSION);
 
-$VERSION = "0.01";
+$VERSION = "0.0101";
 
 __PACKAGE__->mk_accessors(qw(
     _input_path
@@ -123,7 +123,7 @@ sub _init
     my @stringparams;
     foreach my $param (@in_stringparams)
     {
-        if ($param =~ m{\A([^=]+)=(.+)\z}ms)
+        if ($param =~ m{\A([^=]+)=(.*)\z}ms)
         {
             push @stringparams, [$1,$2];
         }
