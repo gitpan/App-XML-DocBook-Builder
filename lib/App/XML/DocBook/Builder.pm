@@ -11,11 +11,11 @@ App::XML::DocBook::Builder - Build DocBook/XML files.
 
 =head1 VERSION
 
-Version 0.0101
+Version 0.0200
 
 =cut
 
-our $VERSION = '0.0101';
+our $VERSION = '0.0200';
 
 =head1 SYNOPSIS
 
@@ -107,9 +107,11 @@ L<http://search.cpan.org/dist/App::XML::DocBook::Builder>
 
 =head1 COPYRIGHT & LICENSE
 
-Copyright 2007 Shlomi Fish, all rights reserved.
+Copyright 2007 Shlomi Fish.
 
-This program is released under the following license: bsd
+This program is released under the following license: MIT/X11
+
+L<http://www.opensource.org/licenses/mit-license.php>
 
 =cut
 
