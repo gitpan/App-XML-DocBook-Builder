@@ -15,13 +15,13 @@ App::XML::DocBook::Docmake - translate DocBook/XML to other formats
 
 =head1 VERSION
 
-Version 0.0200
+Version 0.0201
 
 =cut
 
 use vars qw($VERSION);
 
-$VERSION = "0.0200";
+$VERSION = "0.0201";
 
 __PACKAGE__->mk_accessors(qw(
     _input_path
@@ -231,7 +231,18 @@ sub _is_older
     my @stat1 = stat($file1);
     my @stat2 = stat($file2);
 
-    return ($stat1[9] <= $stat2[9]);
+    if (! @stat2)
+    {
+        die "Input file '$file1' does not exist.";
+    }
+    elsif (! @stat1)
+    {
+        return 1;
+    }
+    else
+    {
+        return ($stat1[9] <= $stat2[9]);
+    }
 }
 
 sub _should_update_output
@@ -305,6 +316,23 @@ sub _calc_output_param_for_xslt
     return $output_path;
 }
 
+sub _calc_make_output_param_for_xslt
+{
+    my $self = shift;
+    my $args = shift;
+
+    my $output_path = $self->_calc_output_param_for_xslt($args);
+
+    # If it's XHTML, then we need to compare against the index.html
+    # because the directory is freshly made.
+    if ($self->_mode() eq "xhtml")
+    {
+        $output_path .= "index.html";
+    }
+
+    return $output_path;
+}
+
 sub _pre_proc_command
 {
     my ($self, $args) = @_;
@@ -344,6 +372,12 @@ sub _run_input_output_cmd
 
     my $input_file = $args->{input};
     my $output_file = $args->{output};
+    my $make_output_file = $args->{make_output};
+
+    if (!defined($make_output_file))
+    {
+        $make_output_file = $output_file;
+    }
 
     if (
         (!$self->_make_like())
@@ -351,7 +385,7 @@ sub _run_input_output_cmd
         $self->_should_update_output(
             {
                 input => $input_file,
-                output => $output_file
+                output => $make_output_file,
             }
         )
     )
@@ -378,6 +412,7 @@ sub _run_xslt
         {
             input => $self->_input_path(),
             output => $self->_calc_output_param_for_xslt($args),
+            make_output => $self->_calc_make_output_param_for_xslt($args),
             template =>
             [
                 "xsltproc",
