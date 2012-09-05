@@ -15,13 +15,13 @@ App::XML::DocBook::Docmake - translate DocBook/XML to other formats
 
 =head1 VERSION
 
-Version 0.0400
+Version 0.0401
 
 =cut
 
 use vars qw($VERSION);
 
-$VERSION = '0.0400';
+$VERSION = '0.0401';
 
 __PACKAGE__->mk_accessors(qw(
     _base_path
@@ -161,23 +161,13 @@ sub _init
     {
         $self->_mode($mode);
 
-        if ($mode_struct->{real_mode})
-        {
-            $self->_real_mode($mode_struct->{real_mode});
-        }
-        else
-        {
-            $self->_real_mode($mode);
-        }
+        my $assign_secondary_mode = sub {
+            my ($struct_field, $attr) = @_;
+            $self->$attr($mode_struct->{$struct_field} || $mode);
+        };
 
-        if ($mode_struct->{xslt_mode})
-        {
-            $self->_xslt_mode($mode_struct->{xslt_mode});
-        }
-        else
-        {
-            $self->_xslt_mode($self->_mode());
-        }
+        $assign_secondary_mode->('real_mode', '_real_mode');
+        $assign_secondary_mode->('xslt_mode', '_xslt_mode');
     }
     else
     {
@@ -373,28 +363,17 @@ sub _pre_proc_command
     my $output_file = $args->{output};
     my $template = $args->{template};
     
-    my @cmd;
-    foreach my $arg (@$template)
-    {
-        # If it's a string
-        if (ref($arg) eq "")
+    return
+    [
+        map
         {
-            push @cmd, $arg;
-        }
-        elsif ($arg->is_output())
-        {
-            push @cmd, $output_file;
-        }
-        elsif ($arg->is_input())
-        {
-            push @cmd, $input_file;
-        }
-        else
-        {
-            die "Unknown Argument in Command Template.";
-        }
-    }
-    return \@cmd;
+              (ref($_) eq '') ? $_
+            : $_->is_output() ? $output_file
+            : $_->is_input() ? $input_file
+            # Not supposed to happen
+            : do { die "Unknown Argument in Command Template."; }
+        } @$template
+    ];
 }
 
 sub _run_input_output_cmd
@@ -428,6 +407,38 @@ sub _run_input_output_cmd
     }
 }
 
+sub _on_output
+{
+    my ($self, $meth, $args) = @_;
+
+    return $self->_has_output() ? $self->$meth($args) : ();
+}
+
+sub _calc_output_params
+{
+    my ($self,$args) = @_;
+
+    return
+    (
+        output => $self->_calc_output_param_for_xslt($args),
+        make_output => $self->_calc_make_output_param_for_xslt($args),
+    );
+}
+
+sub _calc_template_o_flag
+{
+    my ($self,$args) = @_;
+
+    return ("-o", $self->_output_cmd_comp());
+}
+
+sub _calc_template_string_params
+{
+    my ($self) = @_;
+
+    return [map { ("--stringparam", @$_ ) } @{$self->_xslt_stringparams()}];
+}
+
 sub _run_xslt
 {
     my $self = shift;
@@ -454,19 +465,12 @@ sub _run_xslt
     return $self->_run_input_output_cmd(
         {
             input => $self->_input_path(),
-            ($self->_has_output()
-                ? (
-                    output => $self->_calc_output_param_for_xslt($args),
-                    make_output =>
-                        $self->_calc_make_output_param_for_xslt($args),
-                )
-                : ()
-            ),
+            $self->_on_output('_calc_output_params', $args),
             template =>
             [
                 "xsltproc",
-                $self->_has_output() ? ("-o", $self->_output_cmd_comp()) : (),
-                (map { ("--stringparam", @$_ ) } @{$self->_xslt_stringparams()}),
+                $self->_on_output('_calc_template_o_flag', $args),
+                @{$self->_calc_template_string_params()},
                 @base_path_params,
                 @stylesheet_params,
                 $self->_input_cmd_comp(),
