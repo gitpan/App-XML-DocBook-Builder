@@ -31,10 +31,10 @@ name: App-XML-DocBook-Builder
 provides:
   App::XML::DocBook::Builder:
     file: lib/App/XML/DocBook/Builder.pm
-    version: 0.0401
+    version: 0.0402
   App::XML::DocBook::Docmake:
     file: lib/App/XML/DocBook/Docmake.pm
-    version: 0.0401
+    version: 0.0402
   App::XML::DocBook::Docmake::CmdComponent:
     file: lib/App/XML/DocBook/Docmake.pm
     version: 0
@@ -49,5 +49,5 @@ requires:
 resources:
   homepage: http://www.shlomifish.org/open-source/projects/docmake/
   license: http://www.opensource.org/licenses/mit-license.php
-  repository: http://svn.berlios.de/svnroot/repos/web-cpan/App-XML-DocBook-Docmake/
-version: 0.0401
+  repository: http://bitbucket.org/shlomif/docmake
+version: 0.0402

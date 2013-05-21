@@ -55,11 +55,11 @@
    "provides" : {
       "App::XML::DocBook::Builder" : {
          "file" : "lib/App/XML/DocBook/Builder.pm",
-         "version" : "0.0401"
+         "version" : "0.0402"
       },
       "App::XML::DocBook::Docmake" : {
          "file" : "lib/App/XML/DocBook/Docmake.pm",
-         "version" : "0.0401"
+         "version" : "0.0402"
       },
       "App::XML::DocBook::Docmake::CmdComponent" : {
          "file" : "lib/App/XML/DocBook/Docmake.pm",
@@ -73,8 +73,8 @@
          "http://www.opensource.org/licenses/mit-license.php"
       ],
       "repository" : {
-         "url" : "http://svn.berlios.de/svnroot/repos/web-cpan/App-XML-DocBook-Docmake/"
+         "url" : "http://bitbucket.org/shlomif/docmake"
       }
    },
-   "version" : "0.0401"
+   "version" : "0.0402"
 }

@@ -15,13 +15,13 @@ App::XML::DocBook::Docmake - translate DocBook/XML to other formats
 
 =head1 VERSION
 
-Version 0.0401
+Version 0.0402
 
 =cut
 
 use vars qw($VERSION);
 
-$VERSION = '0.0401';
+$VERSION = '0.0402';
 
 __PACKAGE__->mk_accessors(qw(
     _base_path
@@ -53,7 +53,7 @@ Instantiates a new object.
 
 =cut
 
-my %modes = 
+my %modes =
 (
     'fo' =>
     {
@@ -146,7 +146,7 @@ sub _init
         $self->_output_path($output_path) ? 1 : 0
     );
 
-    
+
     $self->_verbose($verbose);
     $self->_stylesheet($stylesheet);
     $self->_xslt_stringparams(\@stringparams);
@@ -202,7 +202,12 @@ sub _exec_command
     {
         print (join(" ", @$cmd), "\n");
     }
-    return system(@$cmd);
+
+    if (system(@$cmd)) {
+        die qq/<<@$cmd>> failed./;
+    }
+
+    return 0;
 }
 
 sub run
@@ -227,7 +232,7 @@ A tool to convert DocBook/XML to other formats
 Available commands:
 
     help - this help screen.
-    
+
     fo - convert to XSL-FO.
     rtf - convert to RTF (MS Word).
     pdf - convert to PDF (Adobe Acrobat).
@@ -362,7 +367,7 @@ sub _pre_proc_command
     my $input_file = $args->{input};
     my $output_file = $args->{output};
     my $template = $args->{template};
-    
+
     return
     [
         map
@@ -457,11 +462,11 @@ sub _run_xslt
     {
         @base_path_params =
         (
-            "--path", 
+            "--path",
             ($self->_base_path() . '/' . $self->_xslt_mode()),
         );
     }
- 
+
     return $self->_run_input_output_cmd(
         {
             input => $self->_input_path(),
