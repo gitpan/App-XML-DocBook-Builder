@@ -3,11 +3,13 @@ package App::XML::DocBook::Docmake;
 use strict;
 use warnings;
 
+use 5.008;
+
 use Getopt::Long qw(GetOptionsFromArray);
 use File::Path;
 use Pod::Usage;
 
-use base 'Class::Accessor';
+use parent 'Class::Accessor';
 
 =head1 NAME
 
@@ -15,13 +17,13 @@ App::XML::DocBook::Docmake - translate DocBook/XML to other formats
 
 =head1 VERSION
 
-Version 0.0402
+Version 0.0403
 
 =cut
 
 use vars qw($VERSION);
 
-$VERSION = '0.0402';
+$VERSION = '0.0403';
 
 __PACKAGE__->mk_accessors(qw(
     _base_path

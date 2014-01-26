@@ -4,7 +4,7 @@
       "Shlomi Fish <shlomif@cpan.org>"
    ],
    "dynamic_config" : 1,
-   "generated_by" : "Module::Build version 0.3901, CPAN::Meta::Converter version 2.120921",
+   "generated_by" : "Module::Build version 0.4007, CPAN::Meta::Converter version 2.132830",
    "keywords" : [
       "automation",
       "convert",
@@ -47,6 +47,8 @@
             "File::Spec" : "0",
             "Getopt::Long" : "2.37",
             "Pod::Usage" : "0",
+            "parent" : "0",
+            "perl" : "5.008",
             "strict" : "0",
             "warnings" : "0"
          }
@@ -55,15 +57,14 @@
    "provides" : {
       "App::XML::DocBook::Builder" : {
          "file" : "lib/App/XML/DocBook/Builder.pm",
-         "version" : "0.0402"
+         "version" : "0.0403"
       },
       "App::XML::DocBook::Docmake" : {
          "file" : "lib/App/XML/DocBook/Docmake.pm",
-         "version" : "0.0402"
+         "version" : "0.0403"
       },
       "App::XML::DocBook::Docmake::CmdComponent" : {
-         "file" : "lib/App/XML/DocBook/Docmake.pm",
-         "version" : 0
+         "file" : "lib/App/XML/DocBook/Docmake.pm"
       }
    },
    "release_status" : "stable",
@@ -76,5 +77,5 @@
          "url" : "http://bitbucket.org/shlomif/docmake"
       }
    },
-   "version" : "0.0402"
+   "version" : "0.0403"
 }
